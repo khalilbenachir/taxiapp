@@ -1,65 +1,62 @@
 import React from "react";
-import { StyleSheet, View, Text, Button } from "react-native";
+import { StyleSheet, View, Text, Button, Dimensions } from "react-native";
+
 import MapView from "react-native-maps";
-import { currentlocation } from "./redux/maps/maps-action";
+
+import {
+  currentlocation,
+  getAddressPreditions
+} from "./redux/maps/maps-action";
 import { connect } from "react-redux";
 
+const { width, height } = Dimensions.get("window");
+const LATITUDE_DELTA = 0.0922;
+const ASPECT_RATION = width / height;
+const LONGITUDE_DELTA = ASPECT_RATION * LATITUDE_DELTA;
+
 class Home extends React.Component {
-  state = {
-    region: {
-      latitude: 37.78825,
-      longitude: -122.4324,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421
-    }
-  };
-
-  getInitialState() {
-    return {
-      region: {
-        latitude: 37.78825,
-        longitude: -122.4324,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
-      }
-    };
-  }
-
   componentDidMount() {
-    const { dispatch1, location } = this.props;
+    const { dispatch1, location, getPredictions } = this.props;
     dispatch1();
+
     console.log("-------test");
+    //  getPredictions();
     console.log(location);
   }
 
   render() {
+    const { location } = this.props;
+    console.log("-------location-------", typeof location.latitude);
     return (
       <MapView
         style={{ flex: 1 }}
-        initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421
+        region={{
+          latitude: location.latitude,
+          longitude: location.longitude,
+          latitudeDelta: LATITUDE_DELTA,
+          longitudeDelta: LONGITUDE_DELTA
         }}
       >
         <MapView.Marker
           coordinate={{
-            latitude: 37.78825,
-            longitude: -122.4324
+            latitude: location.latitude ,
+            longitude: location.longitude
           }}
+
         />
       </MapView>
     );
   }
 }
-
+//parseFloat(location.coords.latitude)
+//location.coords.latitude
 const mapStateToProps = state => ({
   location: state.map.location
 });
 
 const mapDispatchToProps = dispatch => ({
-  dispatch1: () => dispatch(currentlocation())
+  dispatch1: () => dispatch(currentlocation()),
+  getPredictions: () => dispatch(getAddressPreditions())
 });
 
 export default connect(
