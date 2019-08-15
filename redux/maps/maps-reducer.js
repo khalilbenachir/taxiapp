@@ -10,7 +10,9 @@ const LONGITUDE_DELTA = ASPECT_RATION * LATITUDE_DELTA;
 const INITIAL_STATE = {
   location: {},
   predictions: [],
-  inputData: {}
+  inputData: {},
+  pickUp: {},
+  dropOff: {}
 };
 
 const mapReducer = (state = INITIAL_STATE, action) => {
@@ -28,10 +30,24 @@ const mapReducer = (state = INITIAL_STATE, action) => {
     case MAPSActionTypes.GET_INPUT_DATA:
       return {
         ...state,
-        inputData: {
-          [action.payload.key]: action.payload.value
-        }
+        inputData: action.payload
       };
+    case MAPSActionTypes.GET_TOGGLE_SEARCH_RESULT:
+      if (action.payload == "pickUp") {
+        return {
+          ...state,
+          pickUp: true,
+          dropOff: false
+        };
+      }
+      if (action.payload == "dropOff") {
+        return {
+          ...state,
+          dropOff: true,
+          pickUp: false
+        };
+      }
+
     default:
       return state;
   }

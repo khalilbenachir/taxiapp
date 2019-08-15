@@ -25,6 +25,13 @@ export const getInputData = input => {
   };
 };
 
+export const gettogglesearchresult = input => {
+  return {
+    type: MAPSActionTypes.GET_TOGGLE_SEARCH_RESULT,
+    payload: input
+  };
+};
+
 export const getAddressPreditions = () => {
   return (dispatch, store) => {
     let userInput = "KHOURIBGA";

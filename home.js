@@ -10,12 +10,14 @@ import {
 } from "react-native";
 
 import { Item, Input } from "native-base";
-import Icon from "react-native-vector-icons/FontAwesome";
+import Icon from "react-native-vector-icons/MaterialIcons";
 import MapView from "react-native-maps";
 
 import {
   currentlocation,
-  getAddressPreditions
+  getAddressPreditions,
+  getInputData,
+  gettogglesearchresult
 } from "./redux/maps/maps-action";
 import { connect } from "react-redux";
 
@@ -26,20 +28,26 @@ const LONGITUDE_DELTA = ASPECT_RATION * LATITUDE_DELTA;
 
 class Home extends React.Component {
   componentDidMount() {
-    const { dispatch1, location, getPredictions } = this.props;
-    dispatch1();
+    const {
+      getcurrentlocation,
+      location,
+      getPredictions,
+      inputData
+    } = this.props;
+    getcurrentlocation();
     Icon.loadFont();
 
     console.log("-------test");
     //  getPredictions();
     console.log(location);
+    console.log(inputData);
   }
 
   render() {
     const { location } = this.props;
     console.log("-------location-------", typeof location.latitude);
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <MapView
           style={{ flex: 1 }}
           region={{
@@ -59,27 +67,31 @@ class Home extends React.Component {
         </MapView>
         <MapView.Callout style={styles.searchCallout}>
           <Item style={styles.calloutSearch}>
-            <Icon active name='home' />
-            <Input placeholder='Icon Textbox'/>
+            <Icon
+              style={{ color: "#ff4500" }}
+              size={20}
+              active
+              name="location-off"
+            />
+            <Input
+              onFocus={() => this.props.getToggleSearchResult("pickUp")}
+              placeholder="Choose pick up location"
+              onChangeText={text => this.props.getInputData({ pickUp: text })}
+            />
           </Item>
           <Item style={styles.calloutSearchLatChild}>
-            <Icon active name='home' />
-            <Input placeholder='Icon Textbox'/>
+            <Icon
+              style={{ color: "#ff4500" }}
+              size={20}
+              active
+              name="location-on"
+            />
+            <Input
+              onFocus={() => this.props.getToggleSearchResult("dropOff")}
+              placeholder="Choose drop off location"
+              onChangeText={text => this.props.getInputData({ dropOff: text })}
+            />
           </Item>
-        </MapView.Callout>
-        <MapView.Callout style={styles.buttonCallout}>
-          <TouchableOpacity
-            style={[styles.touchable]}
-            onPress={() => console.log("press")}
-          >
-            <Text style={styles.touchableText}>Press Me 1</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.touchable]}
-            onPress={() => console.log("press")}
-          >
-            <Text style={styles.touchableText}>Press Me 2</Text>
-          </TouchableOpacity>
         </MapView.Callout>
       </View>
     );
@@ -115,7 +127,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: "80%",
     marginLeft: "10%",
-    marginTop: 40
+    position: "absolute",
+    top: 55
   },
   calloutSearch: {
     marginLeft: 10,
@@ -126,7 +139,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 10,
     borderBottomWidth: 1,
-    borderColor: "rgba(120, 230, 40, 0.8)"
+    borderColor: "rgba(128,128,128, 0.6)"
   },
   calloutSearchLatChild: {
     borderColor: "transparent",
@@ -136,19 +149,22 @@ const styles = StyleSheet.create({
     height: 40,
     borderWidth: 0.0,
     textAlign: "center",
-    marginBottom: 10,
+    marginBottom: 10
   }
 });
 
 //parseFloat(location.coords.latitude)
 //location.coords.latitude
 const mapStateToProps = state => ({
-  location: state.map.location
+  location: state.map.location,
+  inputData: state.map.inputData
 });
 
 const mapDispatchToProps = dispatch => ({
-  dispatch1: () => dispatch(currentlocation()),
-  getPredictions: () => dispatch(getAddressPreditions())
+  getcurrentlocation: () => dispatch(currentlocation()),
+  getPredictions: () => dispatch(getAddressPreditions()),
+  getInputData: input => dispatch(getInputData(input)),
+  getToggleSearchResult: input => dispatch(gettogglesearchresult(input))
 });
 
 export default connect(
