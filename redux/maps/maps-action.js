@@ -6,7 +6,6 @@ export const currentlocation = () => {
   return dispatch => {
     Geolocation.getCurrentPosition(
       position => {
-        console.log(position);
         dispatch({
           type: MAPSActionTypes.GET_CURRENT_LOCATION,
           payload: position
@@ -33,8 +32,10 @@ export const gettogglesearchresult = input => {
 };
 
 export const getAddressPreditions = () => {
-  return (dispatch, store) => {
-    let userInput = "KHOURIBGA";
+  return (dispatch, getState) => {
+    let userInput = getState().map.pickUp
+      ? getState().map.inputData.pickUp
+      : getState().map.inputData.dropOff;
     RNGooglePlaces.getAutocompletePredictions(userInput)
       .then(results => {
         console.log(results);

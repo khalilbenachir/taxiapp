@@ -37,14 +37,16 @@ const mapReducer = (state = INITIAL_STATE, action) => {
         return {
           ...state,
           pickUp: true,
-          dropOff: false
+          dropOff: false,
+          predictions: {}
         };
       }
       if (action.payload == "dropOff") {
         return {
           ...state,
           dropOff: true,
-          pickUp: false
+          pickUp: false,
+          predictions: {}
         };
       }
 

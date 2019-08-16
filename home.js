@@ -1,4 +1,5 @@
 import React from "react";
+import store from "./redux/store";
 import {
   StyleSheet,
   View,
@@ -12,6 +13,8 @@ import {
 import { Item, Input } from "native-base";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import MapView from "react-native-maps";
+
+import ListView from "./component/listview";
 
 import {
   currentlocation,
@@ -28,28 +31,23 @@ const LONGITUDE_DELTA = ASPECT_RATION * LATITUDE_DELTA;
 
 class Home extends React.Component {
   componentDidMount() {
-    const {
-      getcurrentlocation,
-      location,
-      getPredictions,
-      inputData
-    } = this.props;
+    const { getcurrentlocation, location, inputData } = this.props;
     getcurrentlocation();
     Icon.loadFont();
-
     console.log("-------test");
-    //  getPredictions();
     console.log(location);
     console.log(inputData);
   }
 
   render() {
+    const { getPredictions } = this.props;
+    //getPredictions();
     const { location } = this.props;
     console.log("-------location-------", typeof location.latitude);
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <MapView
-          style={{ flex: 1 }}
+          style={styles.container}
           region={{
             latitude: location.latitude,
             longitude: location.longitude,
@@ -65,34 +63,49 @@ class Home extends React.Component {
             }}
           />
         </MapView>
-        <MapView.Callout style={styles.searchCallout}>
-          <Item style={styles.calloutSearch}>
-            <Icon
-              style={{ color: "#ff4500" }}
-              size={20}
-              active
-              name="location-off"
-            />
-            <Input
-              onFocus={() => this.props.getToggleSearchResult("pickUp")}
-              placeholder="Choose pick up location"
-              onChangeText={text => this.props.getInputData({ pickUp: text })}
-            />
-          </Item>
-          <Item style={styles.calloutSearchLatChild}>
-            <Icon
-              style={{ color: "#ff4500" }}
-              size={20}
-              active
-              name="location-on"
-            />
-            <Input
-              onFocus={() => this.props.getToggleSearchResult("dropOff")}
-              placeholder="Choose drop off location"
-              onChangeText={text => this.props.getInputData({ dropOff: text })}
-            />
-          </Item>
-        </MapView.Callout>
+        <View style={styles.wrapper}>
+          <View
+            style={{
+              flex: 1,
+              width: "100%",
+              alignItems: "center"
+            }}
+          >
+            <MapView.Callout style={styles.searchCallout}>
+              <Item style={styles.calloutSearch}>
+                <Icon
+                  style={{ color: "#ff4500" }}
+                  size={20}
+                  active
+                  name="location-off"
+                />
+                <Input
+                  onFocus={() => this.props.getToggleSearchResult("pickUp")}
+                  placeholder="Choose pick up location"
+                  onChangeText={text =>
+                    this.props.getInputData({ pickUp: text })
+                  }
+                />
+              </Item>
+              <Item style={styles.calloutSearchLatChild}>
+                <Icon
+                  style={{ color: "#ff4500" }}
+                  size={20}
+                  active
+                  name="location-on"
+                />
+                <Input
+                  onFocus={() => this.props.getToggleSearchResult("dropOff")}
+                  placeholder="Choose drop off location"
+                  onChangeText={text =>
+                    this.props.getInputData({ dropOff: text })
+                  }
+                />
+              </Item>
+            </MapView.Callout>
+            <ListView style={styles.listview} />
+          </View>
+        </View>
       </View>
     );
   }
@@ -102,33 +115,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
-  buttonCallout: {
+  listview: {
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    borderRadius: 10,
+    width: "80%",
+    position: 'absolute',
+    top: 110
+  },
+  wrapper:{
     flex: 1,
-    flexDirection: "row",
+    flexDirection: "column",
     position: "absolute",
-    bottom: 10,
-    alignSelf: "center",
-    justifyContent: "space-between",
-    backgroundColor: "transparent",
-    borderWidth: 0.5,
-    borderRadius: 20
-  },
-  touchable: {
-    backgroundColor: "lightblue",
-    padding: 10,
-    margin: 10
-  },
-  touchableText: {
-    fontSize: 24
+    top: 50,
+    width: "100%"
   },
   searchCallout: {
     flexDirection: "column",
     backgroundColor: "rgba(255, 255, 255, 0.8)",
     borderRadius: 10,
     width: "80%",
-    marginLeft: "10%",
-    position: "absolute",
-    top: 55
+    position: 'relative',
+    alignItems: 'center'
   },
   calloutSearch: {
     marginLeft: 10,
@@ -139,7 +146,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 10,
     borderBottomWidth: 1,
-    borderColor: "rgba(128,128,128, 0.6)"
+    borderColor: "rgba(128,128,128,0.2)"
   },
   calloutSearchLatChild: {
     borderColor: "transparent",
