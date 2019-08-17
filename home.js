@@ -15,6 +15,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import MapView from "react-native-maps";
 
 import ListView from "./component/listview";
+import FooterComponent from "./component/footercomponent.js";
 
 import {
   currentlocation,
@@ -40,8 +41,8 @@ class Home extends React.Component {
   }
 
   render() {
-    const { getPredictions } = this.props;
-    //getPredictions();
+    const { getPredictions, pickUp, dropOff } = this.props;
+    getPredictions();
     const { location } = this.props;
     console.log("-------location-------", typeof location.latitude);
     return (
@@ -103,9 +104,10 @@ class Home extends React.Component {
                 />
               </Item>
             </MapView.Callout>
-            <ListView style={styles.listview} />
+            {(pickUp || dropOff) && <ListView style={styles.listview} />}
           </View>
         </View>
+        <FooterComponent/>
       </View>
     );
   }
@@ -164,7 +166,9 @@ const styles = StyleSheet.create({
 //location.coords.latitude
 const mapStateToProps = state => ({
   location: state.map.location,
-  inputData: state.map.inputData
+  inputData: state.map.inputData,
+  pickUp: state.map.pickUp,
+  dropOff: state.map.dropOff
 });
 
 const mapDispatchToProps = dispatch => ({

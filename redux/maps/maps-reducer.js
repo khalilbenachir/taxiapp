@@ -1,6 +1,7 @@
 import MAPSActionTypes from "./mapsactiontypes";
 import { Dimensions } from "react-native";
 
+
 const { width, height } = Dimensions.get("window");
 const LATITUDE_DELTA = 0.0922;
 const ASPECT_RATION = width / height;
@@ -11,8 +12,10 @@ const INITIAL_STATE = {
   location: {},
   predictions: [],
   inputData: {},
-  pickUp: {},
-  dropOff: {}
+  pickUp: false,
+  dropOff: false,
+  selectedAddress: {},
+  distanceMatrix: {}
 };
 
 const mapReducer = (state = INITIAL_STATE, action) => {
@@ -32,6 +35,22 @@ const mapReducer = (state = INITIAL_STATE, action) => {
         ...state,
         inputData: action.payload
       };
+    case MAPSActionTypes.GET_DISTANCE_MATRIX:
+      return {
+        ...state,
+        distanceMatrix: action.payload
+      };
+    case MAPSActionTypes.GET_SELECTED_ADDRESS:
+      let selectedTitle = state.pickUp ? "selectedPickUp" : "selectedDropOff";
+      return {
+        ...state,
+        selectedAddress: {
+          [selectedTitle]: action.payload.location
+        },
+        pickUp: false,
+        dropOff: false
+      };
+
     case MAPSActionTypes.GET_TOGGLE_SEARCH_RESULT:
       if (action.payload == "pickUp") {
         return {
