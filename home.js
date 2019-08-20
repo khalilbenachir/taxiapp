@@ -21,7 +21,8 @@ import {
   currentlocation,
   getAddressPreditions,
   getInputData,
-  gettogglesearchresult
+  gettogglesearchresult,
+  selectedAddress
 } from "./redux/maps/maps-action";
 import { connect } from "react-redux";
 
@@ -41,9 +42,15 @@ class Home extends React.Component {
   }
 
   render() {
-    const { getPredictions, pickUp, dropOff } = this.props;
+    const {
+      getPredictions,
+      pickUp,
+      dropOff,
+      selectedPickUp,
+      selectedDropOff,
+      location
+    } = this.props;
     getPredictions();
-    const { location } = this.props;
     console.log("-------location-------", typeof location.latitude);
     return (
       <View style={styles.container}>
@@ -86,6 +93,7 @@ class Home extends React.Component {
                   onChangeText={text =>
                     this.props.getInputData({ pickUp: text })
                   }
+                  value={selectedPickUp && selectedPickUp.name}
                 />
               </Item>
               <Item style={styles.calloutSearchLatChild}>
@@ -101,6 +109,7 @@ class Home extends React.Component {
                   onChangeText={text =>
                     this.props.getInputData({ dropOff: text })
                   }
+                  value={selectedDropOff && selectedDropOff.name}
                 />
               </Item>
             </MapView.Callout>
@@ -168,14 +177,17 @@ const mapStateToProps = state => ({
   location: state.map.location,
   inputData: state.map.inputData,
   pickUp: state.map.pickUp,
-  dropOff: state.map.dropOff
+  dropOff: state.map.dropOff,
+  selectedPickUp: state.map.selectedAddress.selectedPickUp,
+  selectedDropOff: state.map.selectedAddress.selectedDropOff
 });
 
 const mapDispatchToProps = dispatch => ({
   getcurrentlocation: () => dispatch(currentlocation()),
   getPredictions: () => dispatch(getAddressPreditions()),
   getInputData: input => dispatch(getInputData(input)),
-  getToggleSearchResult: input => dispatch(gettogglesearchresult(input))
+  getToggleSearchResult: input => dispatch(gettogglesearchresult(input)),
+  getSelectedAddress: input => dispatch(selectedAddress(input))
 });
 
 export default connect(

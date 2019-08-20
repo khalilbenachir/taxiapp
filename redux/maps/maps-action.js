@@ -1,7 +1,7 @@
 import MAPSActionTypes from "./mapsactiontypes";
 import Geolocation from "@react-native-community/geolocation";
 import RNGooglePlaces from "react-native-google-places";
-import axios from "axios";
+import * as axios from "axios";
 
 export const currentlocation = () => {
   return dispatch => {
@@ -25,30 +25,22 @@ export const selectedAddress = placeId => {
         console.log(results);
         dispatch({
           type: MAPSActionTypes.GET_SELECTED_ADDRESS,
-          payload: results
+          payload: results.data
         });
       })
       .then(() => {
+        const { location } = getState().map.selectedAddress.selectedPickUp;
         if (
           getState().map.selectedAddress.selectedPickUp ||
           getState().map.selectedAddress.selectedDropOff
         )
-          console.log(
-            "-------getstate-----",
-            getState().map.selectedAddress.selectedPickUp
-          );
+          console.log("-------getstate-----", location);
         axios
           .get("https://maps.googleapis.com/maps/api/place/details/json", {
             params: {
               key: "AIzaSyCFY34jgMctlQaidqs1i4pngrPm4XSk7hg",
-              origins:
-                getState().map.selectedAddress.selectedPickUp.latitude +
-                "," +
-                getState().map.selectedAddress.selectedPickUp.longitude,
-              destinations:
-                getState().map.selectedAddress.selectedDropOff.latitude +
-                "," +
-                getState().map.selectedAddress.selectedDropOff.longitude,
+              origins: location.latitude + "," + location.longitude,
+              destinations: location.latitude + "," + location.longitude,
               mode: "driving"
             }
           })
@@ -57,7 +49,7 @@ export const selectedAddress = placeId => {
             console.log("=========response", response);
             dispatch({
               type: MAPSActionTypes.GET_DISTANCE_MATRIX,
-              payload: response.body
+              payload: response
             });
           });
       })

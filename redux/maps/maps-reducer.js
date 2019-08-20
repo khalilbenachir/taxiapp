@@ -45,7 +45,7 @@ const mapReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         selectedAddress: {
-          [selectedTitle]: action.payload.location
+          [selectedTitle]: action.payload
         },
         pickUp: false,
         dropOff: false
