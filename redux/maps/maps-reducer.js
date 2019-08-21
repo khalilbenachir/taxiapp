@@ -15,7 +15,8 @@ const INITIAL_STATE = {
   pickUp: false,
   dropOff: false,
   selectedAddress: {},
-  distanceMatrix: {}
+  distanceMatrix: {},
+  booking: {}
 };
 
 const mapReducer = (state = INITIAL_STATE, action) => {
@@ -39,6 +40,11 @@ const mapReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         distanceMatrix: action.payload
+      };
+    case MAPSActionTypes.GET_BOOK_CAR:
+      return {
+        ...state,
+        booking: action.payload
       };
     case MAPSActionTypes.GET_SELECTED_ADDRESS:
       let selectedTitle = state.pickUp ? "selectedPickUp" : "selectedDropOff";

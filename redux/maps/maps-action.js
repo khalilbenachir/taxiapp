@@ -30,11 +30,11 @@ export const selectedAddress = placeId => {
       })
       .then(() => {
         const { location } = getState().map.selectedAddress.selectedPickUp;
+        console.log("-------getstate-----", location);
         if (
           getState().map.selectedAddress.selectedPickUp ||
           getState().map.selectedAddress.selectedDropOff
         )
-          console.log("-------getstate-----", location);
         axios
           .get("https://maps.googleapis.com/maps/api/place/details/json", {
             params: {
@@ -68,6 +68,44 @@ export const gettogglesearchresult = input => {
   return {
     type: MAPSActionTypes.GET_TOGGLE_SEARCH_RESULT,
     payload: input
+  };
+};
+
+export const getbookcar = () => {
+  return (dispatch, getState) => {
+    console.log('---------//////-------',getState().map.selectedAddress.selectedPickUp);
+    const {
+      location,
+      address,
+      name
+    } = getState().map.selectedAddress.selectedPickUp;
+    const payload = {
+      data: {
+        pickUp: {
+          address: address,
+          name: name,
+          latitude: location.latitude,
+          longitude: location.longitude
+        },
+        dropOff: {
+          address: address,
+          name: name,
+          latitude: location.latitude,
+          longitude: location.longitude
+        },
+        status: "pending"
+      }
+    };
+    axios
+      .post("http://localhost:3000/api/booking", payload.data)
+      .then(result => {
+        console.log("------------result----------", result);
+        dispatch({
+          type: MAPSActionTypes.GET_BOOK_CAR,
+          payload: result.body
+        });
+      })
+      .catch(e => console.log(e.message));
   };
 };
 

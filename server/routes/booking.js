@@ -2,7 +2,7 @@ var express = require("express");
 const Booking = require("../model/booking");
 var router = express.Router();
 
-router.get("/booking", async (req, res) => {
+router.post("/booking", async (req, res) => {
   res.send("hello");
   const booking = new Booking(req.body);
   try {

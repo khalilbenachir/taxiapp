@@ -25,11 +25,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/", index);
 app.use("/api", booking);
 
-mongoose.connect(`mongodb+srv://benachir:anahowa12@cluster0-ijowc.mongodb.net/test?retryWrites=true&w=majority`,{ useNewUrlParser: true })
+mongoose
+  .connect(
+    `mongodb+srv://benachir:anahowa12@cluster0-ijowc.mongodb.net/test?retryWrites=true&w=majority`,
+    { useNewUrlParser: true })
     .then(() => {
-        console.log('connected');
-        app.listen(3000);
-    }).catch((err) => {
-    console.log(err);
-});
-
+      console.log("connected");
+      app.listen(3000);
+    })
+    .catch(err => {
+      console.log(err);
+    });

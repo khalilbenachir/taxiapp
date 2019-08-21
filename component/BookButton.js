@@ -1,10 +1,12 @@
 import React from "react";
 import { Text, StyleSheet } from "react-native";
 import { View, Button } from "native-base";
+import { connect } from "react-redux";
+import { getbookcar } from "../redux/maps/maps-action";
 
-const BookButton = () => {
+const BookButton = ({ getBookcar }) => {
   return (
-    <Button style={styles.buttonStyle}>
+    <Button style={styles.buttonStyle} onPress={getBookcar}>
       <Text style={styles.btnText}>BOOK</Text>
     </Button>
   );
@@ -47,4 +49,11 @@ const styles = StyleSheet.create({
   }
 });
 
-export default BookButton;
+const mapDispatchToProps = dispatch => ({
+  getBookcar: () => dispatch(getbookcar())
+});
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(BookButton);

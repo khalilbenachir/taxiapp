@@ -51,7 +51,7 @@ class Home extends React.Component {
       selectedDropOff,
       location
     } = this.props;
-    //getPredictions();
+    getPredictions();
     console.log("-------location-------", typeof location.latitude);
     return (
       <View style={styles.container}>
