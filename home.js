@@ -16,6 +16,7 @@ import MapView from "react-native-maps";
 
 import ListView from "./component/listview";
 import FooterComponent from "./component/footercomponent.js";
+import BookButton from "./component/BookButton";
 
 import {
   currentlocation,
@@ -50,7 +51,7 @@ class Home extends React.Component {
       selectedDropOff,
       location
     } = this.props;
-    getPredictions();
+    //getPredictions();
     console.log("-------location-------", typeof location.latitude);
     return (
       <View style={styles.container}>
@@ -116,7 +117,9 @@ class Home extends React.Component {
             {(pickUp || dropOff) && <ListView style={styles.listview} />}
           </View>
         </View>
-        <FooterComponent/>
+        <BookButton/>
+
+        <FooterComponent />
       </View>
     );
   }

@@ -5,13 +5,18 @@ const bookingSchema = mongoose.Schema({
     type: String,
     default: "khalil"
   },
-  
-    address:String,
-    name:String ,
+  pickUp: {
+    address: String,
+    name: String,
     latitude: String,
     longitude: String
-  
-  
+  },
+  dropOff: {
+    address: String,
+    name: String,
+    latitude: String,
+    longitude: String
+  }
 });
 
 module.exports = mongoose.model("Booking", bookingSchema);
